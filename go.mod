@@ -1,4 +1,4 @@
-module github.com/JustGAST/google_calendar_on_kindle
+module github.com/justgast/google_calendar_on_kindle
 
 go 1.20
 
