@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/justgast/google_calendar_on_kindle/internal/calendar_image"
 	"log"
 	"os"
 	"time"
@@ -15,6 +16,15 @@ import (
 )
 
 func main() {
+	err := calendar_image.DrawCalendar()
+	if err != nil {
+		log.Fatalf("Unable to draw calendar: %v", err)
+	}
+
+	log.Println("Calendar saved")
+
+	return
+
 	ctx := context.Background()
 	b, err := os.ReadFile("credentials.json")
 	if err != nil {
