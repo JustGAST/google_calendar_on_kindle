@@ -107,6 +107,10 @@ func drawEvents(events FormattedDayEvents, img *gg.Context) error {
 		if dayEvents, ok := events[key]; ok {
 			eventsString := []string{}
 			for _, event := range dayEvents {
+				if event.Time == "00:00" {
+					event.Time = ""
+				}
+
 				eventsString = append(eventsString, event.Time+" "+event.Summary)
 			}
 
