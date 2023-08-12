@@ -10,13 +10,13 @@ const imgHeight = 600
 const headerHeight = 15
 
 var daysOfWeek = map[int]string{
-	0: "пн",
-	1: "вт",
-	2: "ср",
-	3: "чт",
-	4: "пт",
-	5: "сб",
-	6: "вс",
+	0: "Пн",
+	1: "Вт",
+	2: "Ср",
+	3: "Чт",
+	4: "Пт",
+	5: "Сб",
+	6: "Вс",
 }
 
 func DrawCalendar() error {
@@ -37,7 +37,7 @@ func DrawCalendar() error {
 	for col := float64(0); col < 7; col++ {
 		var colWidth float64 = imgWidth/7 + 1
 		img.DrawRectangle(colWidth*col, 0, colWidth, imgHeight)
-		img.DrawString(daysOfWeek[int(col)], colWidth*col+colWidth/2.2, headerHeight*0.7)
+		img.DrawString(daysOfWeek[int(col)], colWidth*col+colWidth/2.2, headerHeight*0.8)
 	}
 
 	for row := float64(0); row < 6; row++ {
