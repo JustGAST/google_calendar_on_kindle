@@ -16,34 +16,51 @@ type FormattedDayEvents map[string][]FormattedDayEvent
 func FormatEvents(events []*calendar.Event) FormattedDayEvents {
 	formattedEvents := FormattedDayEvents{}
 	for _, event := range events {
-		eventTime, err := getEventTime(event)
+		startTime, err := getEventTime(event.Start)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("error parsing event start time:", err)
 			continue
 		}
 
-		mapKey := eventTime.Format("0102")
+		endTime, err := getEventTime(event.End)
+		if err != nil {
+			fmt.Println("error parsing event end time:", err)
+			continue
+		}
+
+		mapKey := startTime.Format("0102")
 		formattedEvents[mapKey] = append(formattedEvents[mapKey], FormattedDayEvent{
-			Time:    eventTime.Format("15:04"),
+			Time:    startTime.Format("15:04"),
 			Summary: event.Summary,
 		})
+
+		newStartTime := startTime
+		for newStartTime.Day() != endTime.Day() {
+			newStartTime = newStartTime.AddDate(0, 0, 1)
+			mapKey = newStartTime.Format("0102")
+
+			formattedEvents[mapKey] = append(formattedEvents[mapKey], FormattedDayEvent{
+				Time:    startTime.Format("15:04"),
+				Summary: event.Summary,
+			})
+		}
 	}
 
 	return formattedEvents
 }
 
-func getEventTime(event *calendar.Event) (time.Time, error) {
+func getEventTime(eventDateTime *calendar.EventDateTime) (time.Time, error) {
 	var eventTime time.Time
 	var err error
-	if event.Start.DateTime != "" {
-		eventTime, err = time.Parse(time.RFC3339, event.Start.DateTime)
+	if eventDateTime.DateTime != "" {
+		eventTime, err = time.Parse(time.RFC3339, eventDateTime.DateTime)
 		if err != nil {
 			return time.Time{}, fmt.Errorf("unable to parse event time: %w", err)
 		}
 	}
 
-	if event.Start.Date != "" {
-		eventTime, err = time.Parse(time.RFC3339, event.Start.Date+"T00:00:00+03:00")
+	if eventDateTime.Date != "" {
+		eventTime, err = time.Parse(time.RFC3339, eventDateTime.Date+"T00:00:00+03:00")
 		if err != nil {
 			return time.Time{}, fmt.Errorf("unable to parse event time: %w", err)
 		}
