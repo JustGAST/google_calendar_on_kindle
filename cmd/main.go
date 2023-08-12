@@ -36,6 +36,11 @@ func main() {
 	events := google_api.GetEventsForMonth(srv, calendarId)
 	formattedEvents := calendar_image.FormatEvents(events)
 
+	err = calendar_image.DrawCalendar(formattedEvents)
+	if err != nil {
+		log.Fatalf("Unable to draw calendar: %v", err)
+	}
+
 	log.Printf("formattedEvents123: %+v \n", formattedEvents)
 
 	return

@@ -1,6 +1,7 @@
 package google_api
 
 import (
+	"github.com/justgast/google_calendar_on_kindle/internal/calendar_utils"
 	"log"
 	"time"
 
@@ -22,10 +23,10 @@ func GetCalendars(srv *calendar.Service) {
 
 func GetEventsForMonth(srv *calendar.Service, calendarId string) []*calendar.Event {
 	events, err := srv.Events.List(calendarId).
-		TimeMin(getStartDay().Format(time.RFC3339)).
+		TimeMin(calendar_utils.GetStartDay().Format(time.RFC3339)).
 		SingleEvents(true).
 		OrderBy("startTime").
-		TimeMax(getStartDay().AddDate(0, 0, 42).Format(time.RFC3339)).
+		TimeMax(calendar_utils.GetStartDay().AddDate(0, 0, 42).Format(time.RFC3339)).
 		Do()
 
 	if err != nil {
@@ -37,9 +38,4 @@ func GetEventsForMonth(srv *calendar.Service, calendarId string) []*calendar.Eve
 	}
 
 	return events.Items
-}
-
-func getStartDay() time.Time {
-	t := time.Now().AddDate(0, 0, -time.Now().Day()+1)
-	return t.AddDate(0, 0, -int(t.Weekday())+1)
 }
